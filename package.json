@@ -1,0 +1,19 @@
+{
+  "name": "loilonote-mcp",
+  "version": "1.0.0",
+  "description": "Unoffical mcp server and extension for LoiloNote.",
+  "main": "index.js",
+  "scripts": {
+    "dev:server": "pnpm --filter mcp-server dev",
+    "dev:ext": "pnpm --filter extension dev",
+    "build": "pnpm --parallel build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "pnpm": "10.18.1",
+    "npm": "please_use_pnpm_instead"
+  }
+}

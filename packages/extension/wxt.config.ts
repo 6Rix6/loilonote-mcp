@@ -1,0 +1,26 @@
+import { defineConfig } from "wxt";
+
+// See https://wxt.dev/api/config.html
+export default defineConfig({
+  modules: ["@wxt-dev/module-react"],
+  manifest: {
+    name: "ロイロノートMCP",
+    version: "1.0",
+
+    permissions: [
+      "declarativeNetRequest",
+      "declarativeNetRequestWithHostAccess",
+      "scripting",
+      "activeTab",
+    ],
+
+    host_permissions: ["*://*.loilonote.app/*"],
+
+    web_accessible_resources: [
+      {
+        resources: ["/replacement/index.js"], // publicディレクトリからのパス
+        matches: ["<all_urls>"],
+      },
+    ],
+  },
+});
