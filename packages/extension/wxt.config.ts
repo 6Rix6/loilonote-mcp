@@ -18,7 +18,7 @@ export default defineConfig({
 
     web_accessible_resources: [
       {
-        resources: ["/replacement/index.js"], // publicディレクトリからのパス
+        resources: ["/replacement/index.js", "inject.js"],
         matches: ["<all_urls>"],
       },
     ],

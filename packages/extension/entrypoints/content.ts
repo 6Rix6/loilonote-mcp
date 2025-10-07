@@ -1,6 +1,9 @@
 export default defineContentScript({
-  matches: ['*://*.google.com/*'],
-  main() {
-    console.log('Hello content.');
+  matches: ["*://loilonote.app/*"],
+  async main() {
+    console.log("Injecting script...");
+    await injectScript("/inject.js", {
+      keepInDom: true,
+    });
   },
 });
