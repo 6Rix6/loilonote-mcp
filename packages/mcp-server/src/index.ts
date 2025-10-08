@@ -13,7 +13,7 @@ import {
 
 // 定数
 const WS_PORT = 8787;
-const TIMEOUT_MS = 5000;
+const TIMEOUT_MS = 2000;
 const SERVER_NAME = "loilonote-mcp-server";
 const SERVER_VERSION = "1.0.0";
 
@@ -123,7 +123,7 @@ function setupMcpServer(wsManager: WebSocketManager): McpServer {
 
   // カードへの書き込みツール
   server.tool(
-    "Write to current Card",
+    "WriteToCurrentCard",
     "ロイロノートで現在開いているカードに書き込むツール(上書き)",
     {
       text: z.string().describe("書き込む内容"),
@@ -143,7 +143,7 @@ function setupMcpServer(wsManager: WebSocketManager): McpServer {
 
   // カードの読み取りツール
   server.tool(
-    "Read from current Card",
+    "ReadFromCurrentCard",
     "ロイロノートで現在開いているカードの内容を取得するツール",
     {},
     async () => {

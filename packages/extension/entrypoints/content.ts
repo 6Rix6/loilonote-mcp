@@ -1,4 +1,4 @@
-import { AVAILABLE_TOOLS } from "@loilonote-mcp/shared";
+import { AVAILABLE_TOOLS } from "../../shared/src";
 
 export default defineContentScript({
   matches: ["*://loilonote.app/*"],

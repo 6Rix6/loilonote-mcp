@@ -1,5 +1,5 @@
 import { handlers } from "@/libs/handlers";
-import { AvailableTool } from "@loilonote-mcp/shared";
+import { AvailableTool } from "../../shared/src";
 
 export default defineUnlistedScript(() => {
   console.log("Script injected.");

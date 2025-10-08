@@ -1,4 +1,4 @@
-import { MessageType, MessagePayloads } from "@loilonote-mcp/shared";
+import { MessageType, MessagePayloads } from "../../shared/src";
 
 type Handler<T extends MessageType> = (
   payload: MessagePayloads[T],
