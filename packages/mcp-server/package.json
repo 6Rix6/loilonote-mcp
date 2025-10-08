@@ -1,5 +1,5 @@
 {
-  "name": "@myorg/mcp-server",
+  "name": "@loilonote-mcp/mcp-server",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -13,13 +13,20 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "pnpm": ">=10.18.1",
+    "npm": "please_use_pnpm_instead"
+  },
   "dependencies": {
-    "ts-node": "^10.9.2",
+    "@loilonote-mcp/shared": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.19.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "ws": "^8.18.3"
+    "ws": "^8.18.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^24.7.0",
     "@types/ws": "^8.18.1"
   }
 }

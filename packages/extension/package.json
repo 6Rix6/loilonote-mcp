@@ -1,7 +1,7 @@
 {
-  "name": "wxt-react-starter",
+  "name": "@loilonote-mcp/extension",
   "description": "manifest.json description",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -14,7 +14,12 @@
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare"
   },
+  "engines": {
+    "pnpm": ">=10.18.1",
+    "npm": "please_use_pnpm_instead"
+  },
   "dependencies": {
+    "@loilonote-mcp/shared": "workspace:*",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

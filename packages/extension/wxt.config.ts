@@ -12,9 +12,10 @@ export default defineConfig({
       "declarativeNetRequestWithHostAccess",
       "scripting",
       "activeTab",
+      "tabs",
     ],
 
-    host_permissions: ["*://*.loilonote.app/*"],
+    host_permissions: ["*://*.loilonote.app/*", "*://loilonote.app/*"],
 
     web_accessible_resources: [
       {

@@ -1,11 +1,17 @@
 {
-  "name": "shared",
+  "name": "@loilonote-mcp/shared",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc ./src/index.ts --outDir ./dist --declaration"
   },
   "keywords": [],
   "author": "",

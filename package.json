@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev:server": "pnpm --filter mcp-server dev",
+    "build:server": "pnpm --filter mcp-server build",
     "dev:ext": "pnpm --filter extension dev",
+    "build:ext": "pnpm --filter extension build",
+    "build:shared": "pnpm --filter shared build",
+    "dev": "pnpm --parallel dev",
     "build": "pnpm --parallel build"
   },
   "keywords": [],
@@ -13,7 +17,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.18.1",
   "engines": {
-    "pnpm": "10.18.1",
+    "pnpm": ">=10.18.1",
     "npm": "please_use_pnpm_instead"
   }
 }

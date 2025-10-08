@@ -1,19 +1,33 @@
-type ExtendedWindow = typeof window & {
-  V: any;
-  k: any;
-};
+import { handlers } from "@/libs/handlers";
+import { AvailableTool } from "@loilonote-mcp/shared";
 
 export default defineUnlistedScript(() => {
-  console.log("Hello from injected.ts");
-  const extendedWindow = window as ExtendedWindow;
-  setTimeout(() => {
-    console.log(extendedWindow.V);
-  }, 2000);
-  setTimeout(() => {
-    const text = "hello from wsx";
-    const pageManager = extendedWindow.k;
-    const topCardId = pageManager.note._zOrders.at(-1);
-    const card = pageManager.note.cardMap.get(topCardId);
-    card.gadgets.title.text = text;
-  }, 2000);
+  console.log("Script injected.");
+
+  // 結果を送信
+  const sendResult = (requestId: string, success: boolean, result: string) => {
+    window.postMessage({ type: "RESULT", requestId, success, result }, "*");
+  };
+
+  window.addEventListener("message", async (event) => {
+    if (event.source !== window || !event.data.type || !event.data.payload)
+      return;
+
+    const { type, payload } = event.data;
+
+    // リクエストに応じたハンドラを作成
+    const handler = handlers[type as AvailableTool];
+    const { requestId } = payload;
+
+    try {
+      if (!handler) throw new Error("不正なリクエストです");
+      const noteManager = (window as any).k;
+      if (!noteManager) throw new Error("ノートが開かれていないようです");
+
+      const result = handler(payload, noteManager);
+      sendResult(requestId, true, result);
+    } catch (e: any) {
+      sendResult(requestId, false, e.message);
+    }
+  });
 });
