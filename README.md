@@ -20,3 +20,8 @@ pnpm run build
 
 ビルド後 chrome の`パッケージ化されていない拡張機能`から`package/extension/.output/chrome-mv3`を読み込み  
 MCP クライアントは Claude Desktop などお好みで
+
+## Trouble Shooting
+
+- ツールがエラーを返す場合
+  - 拡張機能再読み込み後にページをリロード
