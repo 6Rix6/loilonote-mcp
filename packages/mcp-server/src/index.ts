@@ -50,7 +50,7 @@ class WebSocketManager {
 
   private isResponseMessage(data: any): boolean {
     return (
-      data.type === MessageType.RESPONSE &&
+      data.type === MessageType.RESULT &&
       data.requestId &&
       this.pendingResponses.has(data.requestId)
     );

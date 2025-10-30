@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RefreshCcw } from "lucide-react";
+import { MessageType } from "../../../shared/src";
 
 type Status = "disconnected" | "connecting" | "connected";
 
@@ -8,12 +9,46 @@ export default function Popup() {
   const [noteStatus, setNoteStatus] = useState<Status>("disconnected");
 
   useEffect(() => {
-    checkWsStatus();
+    getWsStatus();
+    getNoteStatus();
   }, []);
 
-  const checkWsStatus = () => {
+  const getWsStatus = () => {
     chrome.runtime.sendMessage({ type: "GET_WS_STATUS" }, (resp) => {
       setWsStatus(resp.status);
+    });
+  };
+
+  const reconnectWs = () => {
+    chrome.runtime.sendMessage({ type: "RECONNECT_WS" });
+    setWsStatus("connecting");
+    setTimeout(() => {
+      getWsStatus();
+    }, 500);
+  };
+
+  const getNoteStatus = async () => {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (!tab || !tab.id) return;
+
+    await chrome.tabs
+      .sendMessage(tab.id, {
+        type: MessageType.GET_NOTE_INFO,
+        payload: {
+          reqestId: "popup",
+        },
+      })
+      .catch(() => {
+        setNoteStatus("disconnected");
+      });
+
+    chrome.runtime.onMessage.addListener((msg) => {
+      if (msg.type === "NOTE_INFO") {
+        setNoteStatus(msg.open ? "connected" : "disconnected");
+      }
     });
   };
 
@@ -28,7 +63,7 @@ export default function Popup() {
             height={40}
             className="rounded-lg"
           />
-          <div className="text-2xl font-bold mr-1 text-gray-600">+</div>
+          <div className="text-2xl mr-1">+</div>
           <img
             src="/images/loilonote.png"
             width={40}
@@ -41,8 +76,8 @@ export default function Popup() {
 
       {/* Status */}
       <div className="w-full flex-1 flex flex-col justify-center gap-4 mt-4">
-        <Status status={wsStatus} title="Server" onRefresh={checkWsStatus} />
-        <Status status={noteStatus} title="Note" onRefresh={() => {}} />
+        <Status status={wsStatus} title="Server" onRefresh={reconnectWs} />
+        <Status status={noteStatus} title="Note" onRefresh={getNoteStatus} />
       </div>
     </div>
   );

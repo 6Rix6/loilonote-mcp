@@ -4,7 +4,8 @@
 export const MessageType = {
   WRITE_TO_CURRENT_CARD: "WRITE_TO_CURRENT_CARD",
   READ_FROM_CURRENT_CARD: "READ_FROM_CURRENT_CARD",
-  RESPONSE: "RESPONSE",
+  GET_NOTE_INFO: "GET_NOTE_INFO",
+  RESULT: "RESULT",
 } as const;
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType];
@@ -15,6 +16,7 @@ export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 export const AVAILABLE_TOOLS = [
   MessageType.READ_FROM_CURRENT_CARD,
   MessageType.WRITE_TO_CURRENT_CARD,
+  MessageType.GET_NOTE_INFO,
 ] as const;
 
 export type AvailableTool = (typeof AVAILABLE_TOOLS)[number];
@@ -26,11 +28,14 @@ export interface MessagePayloads {
   [MessageType.WRITE_TO_CURRENT_CARD]: {
     text: string;
   };
-  [MessageType.READ_FROM_CURRENT_CARD]: Record<string, never>; // 空のオブジェクト
-  [MessageType.RESPONSE]: {
+  [MessageType.READ_FROM_CURRENT_CARD]: Record<string, never>;
+  [MessageType.RESULT]: {
     requestId: string;
     success: boolean;
     result: string;
+  };
+  [MessageType.GET_NOTE_INFO]: {
+    open: boolean;
   };
 }
 

@@ -1,12 +1,15 @@
 import { handlers } from "@/libs/handlers";
-import { AvailableTool } from "../../shared/src";
+import { AvailableTool, MessageType } from "../../shared/src";
 
 export default defineUnlistedScript(() => {
   console.log("Script injected.");
 
   // 結果を送信
   const sendResult = (requestId: string, success: boolean, result: string) => {
-    window.postMessage({ type: "RESULT", requestId, success, result }, "*");
+    window.postMessage(
+      { type: MessageType.RESULT, requestId, success, result },
+      "*"
+    );
   };
 
   window.addEventListener("message", async (event) => {
@@ -15,8 +18,14 @@ export default defineUnlistedScript(() => {
 
     const { type, payload } = event.data;
 
+    if (type === MessageType.GET_NOTE_INFO) {
+      const noteManager = (window as any).k;
+      window.postMessage({ type: "NOTE_INFO", open: !!noteManager }, "*");
+    }
+
     // リクエストに応じたハンドラを作成
     const handler = handlers[type as AvailableTool];
+
     const { requestId } = payload;
 
     try {

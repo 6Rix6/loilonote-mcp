@@ -1,5 +1,5 @@
 export type Result = {
-  type: "result";
+  type: "RESULT";
   requestId: string;
   result: string;
   success: boolean;

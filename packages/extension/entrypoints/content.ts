@@ -1,4 +1,4 @@
-import { AVAILABLE_TOOLS } from "../../shared/src";
+import { AVAILABLE_TOOLS, MessageType } from "../../shared/src";
 
 export default defineContentScript({
   matches: ["*://loilonote.app/*"],
@@ -19,12 +19,18 @@ export default defineContentScript({
     // injected.js からのメッセージ受信
     window.addEventListener("message", (event) => {
       if (event.source !== window || !event.data.type) return;
-      if (event.data.type === "RESULT") {
+      if (event.data.type === MessageType.RESULT) {
         chrome.runtime.sendMessage({
-          type: "RESULT",
+          type: MessageType.RESULT,
           requestId: event.data.requestId,
           success: event.data.success,
           result: event.data.result,
+        });
+      }
+      if (event.data.type === "NOTE_INFO") {
+        chrome.runtime.sendMessage({
+          type: "NOTE_INFO",
+          open: event.data.open,
         });
       }
     });

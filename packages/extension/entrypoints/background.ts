@@ -1,4 +1,4 @@
-import { AVAILABLE_TOOLS } from "../../shared/src";
+import { AVAILABLE_TOOLS, MessageType } from "../../shared/src";
 
 export default defineBackground(() => {
   // index.jsの置き換え
@@ -31,7 +31,7 @@ export default defineBackground(() => {
     }
   );
 
-  const findLiloTab = async () => {
+  const findLoiloTab = async () => {
     const tabs = await chrome.tabs.query({});
     return tabs.find((tab) => tab.url && tab.url.includes("loilonote.app"));
   };
@@ -61,7 +61,9 @@ export default defineBackground(() => {
     ws.addEventListener("open", () => {
       console.log("WS接続成功");
       wsStatus = "connected";
-      chrome.runtime.sendMessage({ status: "connected" });
+      chrome.runtime.sendMessage({ status: "connected" }).catch((e) => {
+        console.log(e);
+      });
       if (reconnectTimer) {
         clearTimeout(reconnectTimer);
         reconnectTimer = null;
@@ -69,16 +71,20 @@ export default defineBackground(() => {
     });
 
     ws.addEventListener("error", (e) => {
-      console.log("WS接続失敗");
+      // console.log("WS接続失敗");
       wsStatus = "disconnected";
-      chrome.runtime.sendMessage({ status: "failed" });
+      // chrome.runtime.sendMessage({ status: "failed" }).catch((e) => {
+      //   console.log(e);
+      // });
       scheduleReconnect();
     });
 
     ws.addEventListener("close", () => {
-      console.log("WS切断");
+      // console.log("WS切断");
       wsStatus = "disconnected";
-      chrome.runtime.sendMessage({ status: "closed" });
+      // chrome.runtime.sendMessage({ status: "closed" }).catch((e) => {
+      //   console.log(e);
+      // });
       scheduleReconnect();
     });
   };
@@ -95,29 +101,60 @@ export default defineBackground(() => {
   ws.onmessage = async (event) => {
     const data = JSON.parse(event.data);
     console.log("message received. : ", data);
-    const tab = await findLiloTab();
-    if (!tab) return;
+    const tab = await findLoiloTab();
+    if (!tab || !tab.id) return;
 
     if (AVAILABLE_TOOLS.includes(data.type)) {
-      chrome.tabs.sendMessage(tab.id!, {
-        type: data.type,
-        payload: data,
-      });
+      chrome.tabs
+        .sendMessage(tab.id, {
+          type: data.type,
+          payload: data,
+        })
+        .catch((e) => {
+          console.log(e);
+          if (ws) {
+            ws.send(
+              JSON.stringify({
+                type: MessageType.RESULT,
+                requestId: data.requestId,
+                result: e,
+                success: false,
+              })
+            );
+          }
+        });
     }
   };
 
-  // ポップアップからのステータス確認
+  // ポップアップまたはコンテンツスクリプトからの通信
   chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
+    // ポップアップ
     if (msg.type === "GET_WS_STATUS") {
-      if (!ws) connectWS();
       sendResponse({ status: wsStatus });
     }
 
-    if (msg.type === "RESULT") {
+    if (msg.type === "RECONNECT_WS") {
+      connectWS();
+    }
+
+    if (msg.type === MessageType.GET_NOTE_INFO) {
+      const tab = await findLoiloTab();
+      if (!tab) return;
+      chrome.tabs
+        .sendMessage(tab.id!, {
+          type: MessageType.GET_NOTE_INFO,
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    // コンテンツスクリプト
+    if (msg.type === MessageType.RESULT) {
       if (!ws) return;
       ws.send(
         JSON.stringify({
-          type: "RESPONSE",
+          type: MessageType.RESULT,
           requestId: msg.requestId,
           result: msg.result,
           success: msg.success,
