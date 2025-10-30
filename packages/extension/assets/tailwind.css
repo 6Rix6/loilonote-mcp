@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+#root {
+  padding: 0;
+}
+
+@theme {
+  --font-lexend: "lexend", sans-serif;
+}
+
+@layer base {
+  @font-face {
+    font-family: "lexend";
+    src: url("/assets/fonts/LexendDeca-VariableFont_wght.ttf");
+  }
+}
