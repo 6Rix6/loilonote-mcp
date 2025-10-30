@@ -112,7 +112,7 @@ export default defineBackground(() => {
         })
         .catch((e) => {
           console.log(e);
-          if (ws) {
+          if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(
               JSON.stringify({
                 type: MessageType.RESULT,
