@@ -151,7 +151,7 @@ export default defineBackground(() => {
 
     // コンテンツスクリプト
     if (msg.type === MessageType.RESULT) {
-      if (!ws) return;
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
       ws.send(
         JSON.stringify({
           type: MessageType.RESULT,
